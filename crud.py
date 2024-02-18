@@ -1,50 +1,34 @@
 import sqlite3
-from models import GiftList, SerpApiItem
+from typing import List
+from models import AgentItem
 
 DATABASE_URL = "sqlite:///./test.db"
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE_URL)
-    conn.row_factory = sqlite3.Row  # This enables column access by name
+    conn = sqlite3.connect(DATABASE_URL.replace("sqlite:///", ""))
+    conn.row_factory = sqlite3.Row
     return conn
 
-def create_gift_list(gift_list: GiftList):
-    conn = get_db_connection()
+def check_item_exists(conn, description: str) -> bool:
     cursor = conn.cursor()
+    cursor.execute("SELECT EXISTS(SELECT 1 FROM gift_items WHERE description=?)", (description,))
+    return cursor.fetchone()[0] == 1
 
-    # Adjust SQL commands for SQLite syntax if needed
-    cursor.execute("INSERT INTO gift_lists (event_type) VALUES (?)", (gift_list.event_type,))
-    list_id = cursor.lastrowid
-
-    for item in gift_list.items:
-        cursor.execute("INSERT INTO gift_items (list_id, name, price_range, description) VALUES (?, ?, ?, ?)",
-                       (list_id, item.name, item.price_range, item.description))
-
+def store_item(conn, description: str, agent_item: AgentItem):
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO gift_items (description, agent_link, agent_price, agent_rating)
+        VALUES (?, ?, ?, ?)
+    """, (description, agent_item.link, agent_item.price, agent_item.rating))
     conn.commit()
-    cursor.close()
-    conn.close()
-    return list_id
 
-def get_gift_list(list_id: int):
-    conn = get_db_connection()
+def get_all_agent_options(conn, description: str) -> List[AgentItem]:
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM gift_items WHERE list_id = ?", (list_id,))
-    items = cursor.fetchall()
-    cursor.close()
-    conn.close()
-
-    # Convert row objects to dictionaries
-    items_list = [dict(item) for item in items]
-    return items_list
-
-
-def get_all_agent_options(description: str, conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM your_table_name WHERE description=?", (description,))
+    cursor.execute("SELECT agent_link, agent_price, agent_rating FROM gift_items WHERE description=?", (description,))
     rows = cursor.fetchall()
-    
-    all_options = []
-    for row in rows:
-        all_options.append(SerpApiItem(description=row['description'], actual_price=row['price'], link=row['link'], rating=row['rating']))
-    
-    return all_options
+    return [AgentItem(link=row['agent_link'], price=row['agent_price'], rating=row['agent_rating']) for row in rows]
+
+def select_best_item(agent_options: List[AgentItem], price_range: str) -> AgentItem:
+    low_price, high_price = map(int, price_range.split('-'))
+    valid_options = [option for option in agent_options if low_price <= int(option.price.strip('$')) <= high_price]
+    return max(valid_options, key=lambda x: (x.rating, -int(x.price.strip('$'))), default=None)

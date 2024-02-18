@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 chat_api_key = os.getenv("OPENAI_API_KEY")
 
-
+'''
 def get_user_input():
       list_event = []
       list_type = input("Which list would you like to make? (e.g. birthday, wedding, etc.)")
@@ -21,7 +21,7 @@ def get_user_input():
       list_event.append(range_of_prices)
 
       return list_event
-
+'''
 
 def prompt_from_chatgpt(user_input):
     api_key = chat_api_key
@@ -44,16 +44,20 @@ def prompt_from_chatgpt(user_input):
     if 'choices' in response_dict and response_dict['choices']:
 
         response = response_dict['choices'][0]['message']['content']
-        return response
+    # Use json.loads() to safely parse the JSON string in the response
+        try:
+            event_list = json.loads(response)
+            return event_list
+        except json.JSONDecodeError as e:
+            print(f"JSON decoding error: {e}")
+            return None
     else:
-
         return None
 
 
 
-def get_list_from_chat_gpt():
-    description = get_user_input()
-    prompt= f"please create in a json form a list for {description[0]} with {description[1]} items. Do not add any more information / lines beside the list {description[2]}the range of prices for each gift should be {description[3]} the list should have gifts in a diffrent prices. some of them should be cheap and some should be expensive. please create such list and also mention the range of the price for each gift "
-    event_list=prompt_from_chatgpt(prompt)
-    event_list = eval(event_list)
+def get_list_from_gpt(list_type: str, number_of_items: int, gender_of_gifts: str, price_range: str):
+    prompt = f"Please create in a json form a list for a {list_type} with {number_of_items} items. {gender_of_gifts} The range of prices for each gift should be {price_range}. The list should have gifts in different prices; some of them should be cheap and some should be expensive. Please create such a list and also mention the range of the price for each gift."
+    event_list = prompt_from_chatgpt(prompt)
+    event_list = json.loads(event_list)  
     return event_list
