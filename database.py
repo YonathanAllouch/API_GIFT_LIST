@@ -9,35 +9,24 @@ conn = sqlite3.connect(DATABASE_PATH)
 # Create a cursor object using the connection
 cursor = conn.cursor()
 
-# SQL statement to create the 'gift_lists' table
-#TO DO: Fix the SQL statement to create the 'gift_lists' table
-'''create_gift_lists_table = """
-CREATE TABLE IF NOT EXISTS gift_lists (
+create_table_query ='''CREATE TABLE IF NOT EXISTS gift_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    event_type TEXT NOT NULL
-);
-"""
-'''
+    description TEXT NOT NULL,
+    estimated_price TEXT NOT NULL,
+    agent_low_link TEXT,
+    agent_low_rating TEXT,
+    agent_mid_link TEXT,
+    agent_mid_rating TEXT,
+    agent_high_link TEXT,
+    agent_high_rating TEXT
+);'''
 
-# SQL statement to create the 'gift_items' table
-#TO DO: Fix the SQL statement to create the 'gift_items' table
-'''create_gift_items_table = """
-CREATE TABLE IF NOT EXISTS gift_items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    list_id INTEGER,
-    name TEXT NOT NULL,
-    price_range TEXT NOT NULL,
-    description TEXT,
-    FOREIGN KEY (list_id) REFERENCES gift_lists (id)
-);
-"""
-'''
+
 # Execute the SQL commands
-#cursor.execute(create_gift_lists_table)
-#cursor.execute(create_gift_items_table)
+cursor.execute(create_table_query)
 
 # Commit the changes and close the connection
 conn.commit()
 conn.close()
 
-print("Database initialized and tables created.")
+print("Database initialized and table created.")
