@@ -17,10 +17,15 @@ async def generate_gift_list(request: UserGiftListRequest):
     gpt_list = get_list_from_gpt(request.list_type, request.number_of_items, request.gender_of_gifts, request.price_range)
     print(gpt_list)
    # Directly use the Python object returned from get_list_from_gpt
-    items = gpt_list # Assuming gpt_list is already a list of dictionaries
+    if gpt_list:
+        key_to_access = list(gpt_list.keys())[0]
+    else:
+        raise HTTPException(status_code=404, detail="No items found")
+    gift_list = gpt_list[key_to_access]
     with get_db_connection() as conn:
-        for item in items['gifts']:
-            item_description = ItemDescription(description=item['name'] , price_range=item['price_range'])  # Create an ItemDescription object from each item
+        for item in gift_list:
+            values_list = list(item.values())  # Convert the dictionary values to a list
+            item_description = ItemDescription(description=values_list[0] , price_range=values_list[1])  # Create an ItemDescription object from each item
             # Check if the item already exists in the database
             if not check_item_exists(conn, item_description.description):
                 # If not, use SerpAPI to get details for each item

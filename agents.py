@@ -36,12 +36,14 @@ def search_with_serpapi(description: str, price_range_low: int, price_range_high
     "api_key": serpapi_key,
     }
     search = GoogleSearch(params)
-    results = search.get_dict().get('shopping_results', [])
+    results = search.get_dict()
     filters = results["filters"]
+    shopping_results = results.get("shopping_results", [])
+    
 
 
     if results:
-        best_match = results[0]  # Assuming the first result is the best match
+        best_match = next((item for item in shopping_results if item.get("position") == 1), None)
         return {
             "description": description,
             "price": best_match.get("price"),
@@ -59,7 +61,8 @@ def execute_parallel_searches(description: str, base_price_range: str) -> list:
     :param base_price_range: The base price range from GPT, formatted as "low-high".
     :return: A list of dictionaries, each containing the results of a search.
     """
-    low, high = map(int, base_price_range.split('-'))
+    cleaned_price_range = base_price_range.replace('$', '').replace(' ', '')
+    low, high = map(int, cleaned_price_range.split('-'))
     mid = (low + high) // 2  # Calculate the middle price point
 
     # Define price segments for the three agents with ±10% range
