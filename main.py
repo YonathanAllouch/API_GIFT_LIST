@@ -15,16 +15,12 @@ async def generate_gift_list(request: UserGiftListRequest):
 
     # Use GPT to generate the gift list based on user input
     gpt_list = get_list_from_gpt(request.list_type, request.number_of_items, request.gender_of_gifts, request.price_range)
-
-    # Ensure the GPT response is in the expected format, consider using json.loads() for safety
-    try:
-        items = json.loads(gpt_list)
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Invalid format received from GPT")
-
+    print(gpt_list)
+   # Directly use the Python object returned from get_list_from_gpt
+    items = gpt_list # Assuming gpt_list is already a list of dictionaries
     with get_db_connection() as conn:
-        for item in items:
-            item_description = ItemDescription(**item)  # Create an ItemDescription object from each item
+        for item in items['gifts']:
+            item_description = ItemDescription(description=item['name'] , price_range=item['price_range'])  # Create an ItemDescription object from each item
             # Check if the item already exists in the database
             if not check_item_exists(conn, item_description.description):
                 # If not, use SerpAPI to get details for each item

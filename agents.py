@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 load_dotenv()
-serpapi_key = os.getenv("SERPAPI_KEY")
+serpapi_key = os.getenv("serp_api_key")
 
 def calculate_price_range(price_point: int) -> str:
     """
