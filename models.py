@@ -23,6 +23,4 @@ class AgentItem(BaseModel):
 
 class StoredItem(BaseModel):
     description: str
-    agent1: Optional[AgentItem] = None
-    agent2: Optional[AgentItem] = None
-    agent3: Optional[AgentItem] = None
+    agent_items: List[AgentItem]
