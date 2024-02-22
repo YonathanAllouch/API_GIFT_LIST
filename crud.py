@@ -45,10 +45,13 @@ def get_all_agent_options(conn, description: str) -> List[AgentItem]:
     # Flatten the results to a list of AgentItem, accounting for each agent in a row
     agent_items = []
     for row in rows:
-        # Assuming row is a tuple and using indexing
-        agent_items.append(AgentItem(link=row[0], price=row[1], rating=row[2]))  # Agent 1
-        agent_items.append(AgentItem(link=row[3], price=row[4], rating=row[5]))  # Agent 2
-        agent_items.append(AgentItem(link=row[6], price=row[7], rating=row[8]))  # Agent 3
+         # Check if agent link and price are not None before creating AgentItem
+        if row[0] is not None and row[1] is not None:
+            agent_items.append(AgentItem(link=row[0], price=row[1], rating=row[2]))
+        if row[3] is not None and row[4] is not None:
+            agent_items.append(AgentItem(link=row[3], price=row[4], rating=row[5]))
+        if row[6] is not None and row[7] is not None:
+            agent_items.append(AgentItem(link=row[6], price=row[7], rating=row[8]))
 
     return agent_items
 

@@ -23,8 +23,8 @@ def test_generate_gift_list():
     response = client.post("/generate-gift-list/", json={
         "list_type": "birthday",
         "number_of_items": 2,
-        "gender_of_gifts": "for a 12 years old boy",
-        "price_range": "50-150"
+        "gender_of_gifts": "for a 12 years old girl",
+        "price_range": "50-500"
     })
     assert response.status_code == 200
     assert response.json() == [

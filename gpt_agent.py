@@ -44,6 +44,6 @@ def prompt_from_chatgpt(user_input):
 
 
 def get_list_from_gpt(list_type: str, number_of_items: int, gender_of_gifts: str, price_range: str):
-    prompt = f"Please create in a json form a list for a {list_type} with {number_of_items} items. {gender_of_gifts} The range of prices for each gift should be {price_range}. The list should have gifts in different prices; some of them should be cheap and some should be expensive. Please create such a list and also mention the range of the price for each gift.Please don't add comments before or after the list provide only the JSON form of the list."
+    prompt = f"Please create in a json form a list for a {list_type} with {number_of_items} item(s). {gender_of_gifts}. The range of prices for each gift should be {price_range}. The list should have gifts in different prices; some of them should be cheap and some should be expensive. Please create such a list and also mention the range of the price for each gift.Please don't add comments before or after the list provide only the JSON form of the list."
     event_list = prompt_from_chatgpt(prompt)
     return event_list

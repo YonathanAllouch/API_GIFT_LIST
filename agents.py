@@ -44,14 +44,22 @@ def search_with_serpapi(description: str, price_range_low: int, price_range_high
 
     if results:
         best_match = next((item for item in shopping_results if item.get("position") == 1), None)
-        return {
+        if best_match is None:
+             return {
+            "name": description,
+            "price": None,
+            "link": None,
+            "rating": None
+        }
+
+        search_result = {
             "description": description,
             "price": best_match.get("price"),
             "link": best_match.get("link"),
             "rating": float(best_match.get("rating", 0))
         }
 
-    return {}
+    return search_result
 
 def execute_parallel_searches(description: str, base_price_range: str) -> list:
     """
@@ -62,7 +70,13 @@ def execute_parallel_searches(description: str, base_price_range: str) -> list:
     :return: A list of dictionaries, each containing the results of a search.
     """
     cleaned_price_range = base_price_range.replace('$', '').replace(' ', '')
-    low, high = map(int, cleaned_price_range.split('-'))
+     # Split the price range and ensure there are two parts
+    parts = cleaned_price_range.split('-')
+    if len(parts) != 2:
+        raise ValueError(f"Invalid price_range format: {base_price_range}. Expected format: 'low-high'.")
+
+     # Unpack the low and high values and convert them to integers
+    low, high = map(int, parts)
     mid = (low + high) // 2  # Calculate the middle price point
 
     # Define price segments for the three agents with ±10% range
