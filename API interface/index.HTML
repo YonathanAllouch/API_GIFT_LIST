@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Maker</title>
+    <link rel="stylesheet" href="index.css">
+    <script>
+        function showEmailInput() {
+            const emailInput = document.getElementById('email-input');
+            if (document.getElementById('gift-receiving-mail').checked) {
+                emailInput.style.display = 'block';
+            } else {
+                emailInput.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="gift.png" alt="Logo" class="logo">
+    </div>
+    <h1>Gift List Generator</h1>
+    <form action="#">
+        <label for="list-name">List name:</label><br>
+        <input type="text" id="list-name" name="list-name" required><br>
+        <label for="number-of-items">Number of items(between 1 and 20):</label><br>
+        <input type="number" id="number-of-items" name="number-of-items" min="1" max="20"><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description"></textarea><br>
+        <div class="wrapper">
+            <header>
+              <h2>Price Range</h2>
+              <p>Enter min and max price for an item</p>
+            </header>
+            <div class="price-input">
+              <div class="field">
+                <span>Min</span>
+                <input type="number" class="input-min" value="2500">
+              </div>
+              <div class="separator">-</div>
+              <div class="field">
+                <span>Max</span>
+                <input type="number" class="input-max" value="7500">
+              </div>
+            </div>
+          </div>
+        <label for="address">Country:</label><br>
+        <input type="text" id="address" name="address"><br>
+        <fieldset id="gift-receiving">
+            <legend>How would you like to receive your gifts?</legend>
+            <div class="radio-group">
+              <input type="radio" id="gift-receiving-mail" name="gift-receiving" value="mail" onchange="showEmailInput()">
+              <label for="gift-receiving-mail"><span>By mail</span></label>
+              <input type="radio" id="gift-receiving-contact" name="gift-receiving" value="contact" onchange="showEmailInput()">
+              <label for="gift-receiving-contact"><span>Contact me</span></label>
+            </div>
+            <div id="email-input" style="display: none;">
+              <label for="email">Your email:</label><br>
+              <input type="email" id="email" name="email"><br>
+            </div>
+        </fieldset>
+        <button type="submit">Continue</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,157 @@
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: auto;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(251, 245, 212, 0.52);
+}
+
+img{
+    max-width: 120px;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #4a4a4a;
+}
+
+form {
+    display: box;
+    grid-template-columns: 2fr 1fr;
+    width: 700px;
+    margin: 0 auto;
+    gap: 1rem;
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    align-items: center; /* add this line */
+    justify-items: stretch; /* add this line */
+}
+
+form label {
+    display: block;
+    margin-top: 0.2rem;
+    font-weight: bold;
+    font-size: large;
+    text-align: center; /* add this line */
+}
+
+form input,
+form textarea {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* add this line */
+    margin-bottom: 1rem;
+    font-size: medium;
+}
+
+form textarea {
+    width: 700px;
+    height: 60px;
+    resize: none;
+}
+
+fieldset {
+    margin: 2rem 5rem;
+    border: aliceblue;
+}
+
+fieldset legend {
+    margin: auto;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.radio-group {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 1rem;
+    width: 50px;
+}
+
+.radio-group label span{
+    margin: 30px 250px;
+    margin-left: auto;
+    font-size: large;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    width: max-content;
+}
+
+form button {
+    grid-column: 1 / 3;
+    padding: 1rem 20rem;
+    background-color: #00e1ff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: auto;
+}
+
+form button:hover {
+    background-color: #333;
+}
+
+#email-input {
+    grid-column: 1 / 2;
+}
+
+.wrapper{
+    width: 650px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 15px 20px;
+    margin-bottom: auto;
+    margin-top: auto;
+    margin-left: auto;
+}
+header h2{
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin: auto;
+}
+header p{
+    margin-top: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+.price-input{
+    width: 100%;
+    display: flex;
+    margin: 30px 0 35px;
+}
+.price-input .field{
+    display: flex;
+    width: 100%;
+    height: 45px;
+    align-items: center;
+}
+.field input{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-size: 19px;
+    margin-left: 12px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #999;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+.price-input .separator{
+    width: 130px;
+    display: flex;
+    font-size: 19px;
+    align-items: center;
+    justify-content: center;
+}
