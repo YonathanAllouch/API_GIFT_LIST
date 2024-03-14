@@ -36,17 +36,16 @@
             <div class="price-input">
               <div class="field">
                 <span>Min</span>
-                <input type="number" class="input-min" value="2500">
+                <input type="number" class="input-min" placeholder="Min price" value="1" min="1" max="10000">
               </div>
               <div class="separator">-</div>
               <div class="field">
                 <span>Max</span>
-                <input type="number" class="input-max" value="7500">
+                <input type="number" class="input-max" placeholder="Max price" value="10000" min="2" max="10000">
               </div>
             </div>
           </div>
-        <label for="address">Country:</label><br>
-        <input type="text" id="address" name="address"><br>
+          </div>
         <fieldset id="gift-receiving">
             <legend>How would you like to receive your gifts?</legend>
             <div class="radio-group">
@@ -62,5 +61,50 @@
         </fieldset>
         <button type="submit">Continue</button>
     </form>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const form = document.querySelector("form");
+          form.addEventListener("submit", function(event) {
+              event.preventDefault(); // Prevent the default form submission behavior
+            
+            // Get the price range input values
+            const minPrice = document.querySelector(".input-min").value;
+            const maxPrice = document.querySelector(".input-max").value;
+
+              // Collect form data
+              const formData = {
+            list_type: document.getElementById("list-name").value, // Ensure you have an input with id="list-type"
+            number_of_items: parseInt(document.getElementById("number-of-items").value, 10), // Parse to integer
+            gender_of_gifts: document.getElementById("description").value, // Ensure you have an input with id="gender-of-gifts"
+            price_range: minPrice + ' - ' + maxPrice // Construct the price range string
+            };
+            
+            console.log("Collected FormData:", formData);
+            
+              // Send the data to your FastAPI endpoint using Fetch API
+              fetch("http://127.0.0.1:8000/generate-gift-list/", { 
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(formData)
+              })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Success:", data);
+                // Handle success (e.g., navigate to another page or show a success message)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                // Handle errors (e.g., show an error message to the user)
+            });
+        });
+      });
+    </script>      
 </body>
 </html>

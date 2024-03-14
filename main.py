@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import json
 from models import StoredItem, UserGiftListRequest, ItemDescription, AgentItem  # Ensure these models are defined in your models.py
@@ -8,6 +9,22 @@ from gpt_agent import get_list_from_gpt
 from database import get_db_connection
 
 app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type",
+        "Content-Length",
+        "Host",
+        "User-Agent",
+        "Accept",
+        "Accept-Encoding",
+        "Connection",
+        ],
+)
 
 @app.post("/generate-gift-list/", response_model=List[StoredItem])
 async def generate_gift_list(request: UserGiftListRequest):
