@@ -157,3 +157,18 @@ header p{
     align-items: center;
     justify-content: center;
 }
+#resultsContainer {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#giftList {
+    list-style-type: none;
+}
+
+#giftList li {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+}

@@ -46,7 +46,8 @@
             </div>
           </div>
           </div>
-        <fieldset id="gift-receiving">
+        
+        <!--<fieldset id="gift-receiving">
             <legend>How would you like to receive your gifts?</legend>
             <div class="radio-group">
               <input type="radio" id="gift-receiving-mail" name="gift-receiving" value="mail" onchange="showEmailInput()">
@@ -58,7 +59,8 @@
               <label for="email">Your email:</label><br>
               <input type="email" id="email" name="email"><br>
             </div>
-        </fieldset>
+        </fieldset>-->
+
         <button type="submit">Continue</button>
     </form>
     <script>
@@ -82,22 +84,24 @@
             console.log("Collected FormData:", formData);
             
               // Send the data to your FastAPI endpoint using Fetch API
-              fetch("http://127.0.0.1:8000/generate-gift-list/", { 
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(formData)
+            fetch("http://127.0.0.1:8000/generate-gift-list/", { 
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
               })
             .then(response => {
+                console.log("Response received", response);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log("Success:", data);
-                // Handle success (e.g., navigate to another page or show a success message)
+              console.log("Data received", data);
+                localStorage.setItem('results', JSON.stringify(data)); // Store the data in local storage
+                window.location.href = 'results.html'; // Redirect to the results page
             })
             .catch((error) => {
                 console.error("Error:", error);
