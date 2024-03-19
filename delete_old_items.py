@@ -3,7 +3,7 @@ DATABASE_URL = "./test.db"  # Adjust the path as necessary
 
 def delete_old_items():
     with sqlite3.connect(DATABASE_URL) as conn:
-        conn.execute("DELETE FROM gift_items WHERE created_at < DATETIME('now', '-24 hours')")
+        conn.execute("DELETE FROM gift_items WHERE created_at < DATETIME('now', '-30 minutes')")
         conn.commit()
 
 if __name__ == "__main__":
