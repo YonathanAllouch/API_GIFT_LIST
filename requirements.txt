@@ -1,4 +1,4 @@
-fastapi==0.68.0
+fastapi==0.109.1
 uvicorn==0.15.0
 serpapi==0.1.5
 google_search_results==2.4.2
