@@ -37,6 +37,7 @@ def search_with_serpapi(description: str, price_range_low: int, price_range_high
     }
     search = GoogleSearch(params)
     results = search.get_dict()
+    print("Results received:", results)
     filters = results["filters"]
     shopping_results = results.get("shopping_results", [])
     

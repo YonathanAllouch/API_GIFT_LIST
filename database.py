@@ -15,7 +15,8 @@ def init_db():
                 description TEXT NOT NULL,
                 agent1_link TEXT, agent1_price TEXT, agent1_rating REAL,
                 agent2_link TEXT, agent2_price TEXT, agent2_rating REAL,
-                agent3_link TEXT, agent3_price TEXT, agent3_rating REAL
+                agent3_link TEXT, agent3_price TEXT, agent3_rating REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """)
         conn.commit()
