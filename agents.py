@@ -2,11 +2,11 @@ from serpapi import GoogleSearch
 import os
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+import logging
 
 
 load_dotenv()
-serpapi_key = os.getenv("serp_api_key")
+serp_api_key = os.getenv("SERP_API_KEY")
 
 def calculate_price_range(price_point: int) -> str:
     """
@@ -20,6 +20,8 @@ def calculate_price_range(price_point: int) -> str:
     return f"{low_price}-{high_price}"
 
 def search_with_serpapi(description: str, price_range_low: int, price_range_high: int) -> dict:
+    logging.info(f"Starting SerpAPI search for '{description}' with price range {price_range_low}-{price_range_high}")
+    search_result = {'description': description, 'price': None, 'link': None, 'rating': None}  # Default result
     """
     Perform a search using SerpAPI based on the given description and price range.
 
@@ -28,37 +30,37 @@ def search_with_serpapi(description: str, price_range_low: int, price_range_high
     :param price_range_high: The upper bound of the price range for the search query.
     :return: A dictionary with the description, found price, and link, or an empty dict if no results.
     """
-    url = "https://www.searchapi.io/api/v1/search"
     params = {
     "engine": "google_shopping",
     "q": description,
     "tbs": f"mr:1,avg_rating:400,price:1,ppr_min:{price_range_low},ppr_max:{price_range_high},sales:1",
-    "api_key": serpapi_key,
+    "api_key": serp_api_key,
     }
-    search = GoogleSearch(params)
-    results = search.get_dict()
-    print("Results received:", results)
-    filters = results["filters"]
-    shopping_results = results.get("shopping_results", [])
-    
+    try:
+        search = GoogleSearch(params)
+        results = search.get_dict()
+        logging.info(f"Received SerpAPI results for '{description}': {results}")
+        filters = results.get("filters", {})
+        shopping_results = results.get("shopping_results", [])
+        
+        if shopping_results:
+            best_match = next((item for item in shopping_results if item.get("position") == 1), None)
+            if best_match:
+                # Update search_result with the best match's details
+                search_result.update({
+                    "price": best_match.get("price"),
+                    "link": best_match.get("link"),
+                    "rating": float(best_match.get("rating", 0))
+                })
+            else:
+                logging.warning(f"No best match found for '{description}' within the specified price range.")
+        else:
+            logging.warning(f"No shopping results found for '{description}'.")
 
-
-    if results:
-        best_match = next((item for item in shopping_results if item.get("position") == 1), None)
-        if best_match is None:
-             return {
-            "name": description,
-            "price": None,
-            "link": None,
-            "rating": None
-        }
-
-        search_result = {
-            "description": description,
-            "price": best_match.get("price"),
-            "link": best_match.get("link"),
-            "rating": float(best_match.get("rating", 0))
-        }
+    except KeyError as e:
+        logging.error(f"KeyError accessing result data for '{description}': {e}")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred during SerpAPI search for '{description}': {e}")
 
     return search_result
 
