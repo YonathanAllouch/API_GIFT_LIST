@@ -7,6 +7,7 @@ from crud import select_best_item, store_item, check_item_exists, get_all_agent_
 from agents import execute_parallel_searches
 from gpt_agent import get_list_from_gpt  
 from database import get_db_connection
+from delete_old_items import delete_old_items
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -34,6 +35,7 @@ app.add_middleware(
 @app.post("/generate-gift-list/", response_model=List[StoredItem])
 async def generate_gift_list(request: UserGiftListRequest):
     logger.info("Received request to generate gift list.")
+    delete_old_items()
     final_list = []
     try:
         # Use GPT to generate the gift list based on user input
